@@ -838,15 +838,14 @@ For example, if you want to add some functionality to the context:
         def secret(self):
             return 'my secret here'
 
-Then you can use :meth:`~ext.commands.Bot.get_context` inside :func:`on_message` with combination with
-:meth:`~ext.commands.Bot.invoke` to use your custom context:
+For your bot to use your new context you need to override the :meth:`~ext.commands.Bot.get_context` method.
+Pass in the `cls` kwarg with the new context you just created.
 
 .. code-block:: python3
 
     class MyBot(commands.Bot):
-        async def on_message(self, message):
-            ctx = await self.get_context(message, cls=MyContext)
-            await self.invoke(ctx)
+        async def get_context(self, message, *, cls=MyContext):
+            return await super().get_context(message, cls=cls)
 
 Now inside your commands you will have access to your custom context:
 
