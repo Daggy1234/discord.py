@@ -907,7 +907,34 @@ class Guild(Hashable):
             return m.nick == name or m.name == name
 
         return utils.find(pred, members)
+    
+    def get_channel_named(self, name: str, /) -> Optional[GuildChannel]:
+        """ Returns the first channel found that matches the name provided.
+        
+        If no channel is found, ``None`` is returned.
+        
+        .. versionadded:: 2.0
+        
+        Parameters
+        -----------
+        name: :class:`str`
+            The name of the channel to lookup.
 
+        Returns
+        --------
+        Optional[:class:`GuildChannel`]
+            The channel in this guild with the associated name. If not found
+            then ``None`` is returned.
+        """
+        result = None
+        channels = self.channels
+        # If the channel name provided starts with a #, remove hash
+        if name.startswith("#"):
+            name = name[1:]
+        result = discord.utils.get(channels, name=name)
+        return result
+        
+    
     def _create_channel(
         self,
         name: str,
